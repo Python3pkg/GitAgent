@@ -57,11 +57,11 @@ def write_example_config( config_name, config_type='simple' ):
 
     with open( config_name,'w' ) as f:
         f.write( json.dumps( config_dict, sort_keys=True, indent=4, ensure_ascii=False ) )
-        print('write config to %s successed'%config_name)
+        print(('write config to %s successed'%config_name))
     
 
 def load_config( config_name ):
-    print(' load_config:',config_name)
+    print((' load_config:',config_name))
     config = None
     with open( config_name, 'r' ) as f:
         config = json.load(f)

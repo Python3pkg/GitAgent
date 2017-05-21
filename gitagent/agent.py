@@ -44,7 +44,7 @@ class git_work_progress( git.RemoteProgress ):
         self.delegate = delegate
 
     def update(self,op_code,cur_count,max_count=None,message=""):
-        print( '-->',op_code,cur_count,max_count,message )
+        print(( '-->',op_code,cur_count,max_count,message ))
         self.delegate.console_output( '\r' + "working with op_code[%s] progress[%s/%s] %s"%(op_code,cur_count,max_count,message) )
 
 class GitWorker():
@@ -60,7 +60,7 @@ class GitWorker():
         self.command = command
 
     def console_output(self,s):
-        print('console [%s]>>'%self.console_id,s )
+        print(('console [%s]>>'%self.console_id,s ))
         if self.console_id != None:
             
             try:
@@ -71,7 +71,7 @@ class GitWorker():
                 ws_cocket.write_message( msg )
 
             except Exception as e:
-                print('write to websocket failed:',e)
+                print(('write to websocket failed:',e))
 
     def non_block_read(self, output):
         fd = output.fileno()
@@ -86,9 +86,9 @@ class GitWorker():
             return ""
 
     def worker(self):
-        print( "-"*20 + "git checkout " + "-"*20 )
-        print( "branch:" + self.git_branch )
-        print( "hash:" + str(self.git_hash))
+        print(( "-"*20 + "git checkout " + "-"*20 ))
+        print(( "branch:" + self.git_branch ))
+        print(( "hash:" + str(self.git_hash)))
         
         progress_delegate = git_work_progress( self )
         
@@ -101,7 +101,7 @@ class GitWorker():
             if repo.head.is_detached == False:
                 branch_now = repo.active_branch.name
             
-            print( 'Now repo is on branch:',branch_now )
+            print(( 'Now repo is on branch:',branch_now ))
             if self.git_branch in repo.branches:
                 #make sure on right branch
 
@@ -146,11 +146,11 @@ class GitWorker():
             
             self.finish_ret = 'success'
         except Exception as e:
-            print('Exception:',e)
+            print(('Exception:',e))
             self.err_msg = str(e)
             self.finish_ret = 'failed'
         
-        print( "-"*20 + "git checkout finish:" + self.finish_ret + "-"*20 )
+        print(( "-"*20 + "git checkout finish:" + self.finish_ret + "-"*20 ))
 
     def start(self):
         t = threading.Thread( target = self.worker )
@@ -190,7 +190,7 @@ def verify_request( request ):
         del request_args['sign']
 
         sign_right = auth.sign( method, uri, request_args, password, time_stamp = request_args['time'] )['sign']
-        print( 'sign_right:',sign_right )
+        print(( 'sign_right:',sign_right ))
 
         if sign_right != sign:
             print( 'verify request failed due to sign not match' )
@@ -250,7 +250,7 @@ class StatusHandler(tornado.web.RequestHandler):
 
         name_getter = lambda diff:diff.a_path
         for change_type in "ADRM":
-            print( 'change_type:',change_type )
+            print(( 'change_type:',change_type ))
             change[change_type] = list(map( name_getter, diff.iter_change_type( change_type )))
 
         self.write( pretty_json_dump(info) )
@@ -298,7 +298,7 @@ class PullHandle(tornado.web.RequestHandler):
         repo_path = config['repo'][ repo ]['repo_path']
         if 'GIT_SSH_COMMAND' in config['repo'][repo]:
             GIT_SSH_COMMAND = config['repo'][repo]['GIT_SSH_COMMAND']
-            print('use GIT_SSH_COMMAND:',GIT_SSH_COMMAND)
+            print(('use GIT_SSH_COMMAND:',GIT_SSH_COMMAND))
 
         git_worker = GitWorker( repo_path, git_branch, git_hash, command, console_id, GIT_SSH_COMMAND)
         git_worker.start()
